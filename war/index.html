@@ -1,0 +1,198 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<title>Lion Time by RSenApps</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+<noscript>
+ <link rel="shortcut icon" href="static/favicon.ico">
+<link rel="stylesheet" href="css/5grid/core.css" />
+<link rel="stylesheet" href="css/5grid/core-desktop.css" />
+<link rel="stylesheet" href="css/5grid/core-1200px.css" />
+<link rel="stylesheet" href="css/5grid/core-noscript.css" />
+<link rel="stylesheet" href="css/style.css" />
+<link rel="stylesheet" href="css/style-desktop.css" />
+</noscript>
+<script src="css/5grid/jquery.js"></script>
+<script src="css/5grid/init.js?use=mobile,desktop,1000px&amp;mobileUI=1&amp;mobileUI.theme=none"></script>
+<!--[if IE 9]><link rel="stylesheet" href="css/style-ie9.css" /><![endif]-->
+</head><body>
+<div id="header-wrapper">
+	<header id="header">
+		<div class="5grid-layout">
+			<div class="row">
+				<div class="12u" id="logo"> <!-- Logo -->
+					<h1><a href="#" class="mobileUI-site-name">Lion Time</a></h1>
+					<p>by RSenApps</p>
+				</div>
+			</div>
+		</div>
+		<div class="5grid-layout">
+			<div class="row">
+				<div class="12u" id="menu">
+					<nav class="mobileUI-site-nav">
+						<ul>
+							<li><a href="http://RSenApps.appspot.com">RSenApps</a></li>
+							<li><a href="https://chrome.google.com/webstore/detail/aeelfcooaakdiijgfllekabkhmgackgl">Chrome Extension</a></li>
+							<li><a href="http://play.google.com/store/apps/details?id=com.RSen.LionTime">Android App</a></li>
+							<li><a href="https://itunes.apple.com/us/app/lion-time/id605924739?mt=8">iPhone App</a></li>
+							<li><a href="mailto:RSenApps+LionTimeOnline@gmail.com">Email Me</a></li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</header>
+</div>
+<div id="wrapper">
+	<div id="page">
+		<div class="5grid-layout">
+			<div class="row">
+				<div class="3u">
+					<div id="sidebar2">
+					<section>
+						 <div id="scheduleDiv" style="DISPLAY: none">
+        <p>If your schedule is not shown, go to the <a target="_blank" href="https://thesouk.lakesideschool.org/">Souk</a> and login.
+        <p> 
+        <button onclick="document.getElementById('scheduleFrame').src+=''" id="tryagain">Try Again</button>
+        </p>
+        <iframe height = "1165px" id="scheduleFrame"  frameborder="0">
+		</iframe> </div>
+		
+		<form name="input" action="html_form_action.asp" method="get">
+		Student ID: <input type="text" name="id">
+		<input type="BUTTON" value="View Schedule" OnClick = "document.getElementById('scheduleFrame').src = 'https://thesouk.lakesideschool.org/ScheduleSearch/ExtendedSchedule.aspx?SRP=1,1,' + input.id.value + ',2'; scheduleDiv.style.display = 'block';">
+		</form>
+		</div>
+					</section>
+				</div>
+				<div class="9u mobileUI-main-content">
+				<section>
+					<p> <a href="https://itunes.apple.com/us/app/lion-time/id605924739?mt=8"> Get the new iPhone app!</a></p>
+							        <canvas id="myCanvas" width="400" height="400">
+  Your browser does not support canvas
+</canvas> 
+	
+<script>
+var canvas = document.getElementById('myCanvas');
+var context = canvas.getContext('2d');
+
+var clockImage = new Image();
+var clockImageLoaded = false;
+clockImage.onload = function(){
+  clockImageLoaded = true;
+}
+clockImage.src = 'static/liontimeflat.png';
+
+function addBackgroundImage(){
+  context.drawImage(clockImage, canvas.width/2 * -1 ,canvas.height/2 * -1,canvas.width, canvas.height);
+}
+
+function degreesToRadians(degrees) {
+  return (Math.PI / 180) * degrees
+}
+
+function drawHourHand(theDate){
+  var hours = theDate.getHours() + theDate.getMinutes() / 60;
+
+  var degrees = (hours * 360 / 12) % 360;
+
+  context.save();
+  context.fillStyle = 'b6a37b';
+  context.strokeStyle = '#555';
+  
+  context.rotate( degreesToRadians(degrees));
+
+  drawHand(110, 7, 3);
+
+  context.restore();
+
+}
+
+function drawMinuteHand(theDate){
+  var minutes = theDate.getMinutes() + theDate.getSeconds() / 60;
+
+  context.save();
+  context.fillStyle = 'b6a37b';
+  context.strokeStyle = '#555';
+  context.rotate( degreesToRadians(minutes * 6));
+
+  drawHand(130, 7, 5);
+
+  context.restore();
+}
+
+function drawHand(size, thickness, shadowOffset){
+  thickness = thickness || 4;
+
+  
+  context.beginPath();
+  context.moveTo(0,0); // center
+  context.lineTo(thickness *-1, -10);
+  context.lineTo(0, size * -1);
+  context.lineTo(thickness,-10);
+  context.lineTo(0,0);
+  context.fill();
+  context.stroke();
+}
+
+function drawSecondHand(theDate){
+  var seconds = theDate.getSeconds();
+
+  context.save();
+  context.fillStyle = 'b6a37b';
+  context.globalAlpha = 1.0;
+  context.rotate( degreesToRadians(seconds * 6));
+
+  drawHand(150, 4, 8);
+
+  context.restore();
+}
+
+
+function createClock(){
+
+  addBackgroundImage();
+
+  var theDate = new Date();
+  drawHourHand(theDate);
+  drawMinuteHand(theDate);
+  drawSecondHand(theDate);
+}
+
+function clockApp(){
+  if(!clockImageLoaded){
+    setTimeout('clockApp()', 100);
+    return;
+  }
+  context.translate(canvas.width/2, canvas.height/2);
+  createClock();
+  setInterval('createClock()', 1000)
+}
+
+clockApp();
+ </script>
+<iframe src="updatingpart.jsp" height = "400px" frameborder="0">
+	</iframe>
+						
+					</div>
+					</section>
+				</div>
+				
+			</div>
+		</div>
+</div>
+
+<div>
+	<div class="5grid-layout" id="copyright">
+		<div class="row">
+			<div class="12u">
+				<p>&copy; RSenApps | Design: <a href="http://html5templates.com/">HTML5Templates.com</a></p>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>
